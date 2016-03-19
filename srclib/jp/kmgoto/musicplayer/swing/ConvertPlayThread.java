@@ -148,7 +148,7 @@ public class ConvertPlayThread extends Thread {
       int efRet = 0;
 
       try {
-        line.open(outputFormat, out.length);
+        line.open(outputFormat, 100*out.length);
          // volCtrl = (FloatControl) line.getControl(
           // FloatControl.Type.VOLUME);
         line.start();
