@@ -173,8 +173,8 @@ public class PercussionSplitter {
       float pSq = p[i]*p[i], hSq = h[i]*h[i];
 
       if (mix > 0.5f){ 
-         //ratio = (hSq + 2*(1f - mix)*pSq)/(pSq + hSq);
-         ratio = hSq/(pSq + hSq);
+         ratio = (hSq + 2*(1f - mix)*pSq)/(pSq + hSq);
+         // ratio = hSq/(pSq + hSq);
       } else { 
          ratio = (pSq + 2*mix*hSq)/(pSq + hSq); 
       }

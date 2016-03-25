@@ -25,6 +25,7 @@ public class StereoPSTest {
 
   public static void main(String[] args){
 
+    boolean recordPeakOnly = false;
     File inputFile  = new File(args[0]);
     File outputFile = new File("tmp.raw");
     int nargs = args.length;
@@ -36,12 +37,14 @@ public class StereoPSTest {
 
     try {
       FileInputStream fis = new FileInputStream(inputFile);
-//      FileOutputStream fos = new FileOutputStream(outputFile);
+      FileOutputStream fos = new FileOutputStream(outputFile);
 
-      BufferedInputStream bis = new BufferedInputStream(fis);
-//      BufferedOutputStream bos = new BufferedOutputStream(fos);
-//      BufferedOutputStream bos = new BufferedOutputStream(System.out);
-     OutputStream bos = System.out;
+     BufferedInputStream bis = new BufferedInputStream(fis);
+     BufferedOutputStream bos;
+ 
+     if (!recordPeakOnly)
+       bos = new BufferedOutputStream(fos);
+     else bos = null;
 
      byte[] buf = new byte[4096]; // should work for any byte length
 
@@ -50,7 +53,7 @@ public class StereoPSTest {
 
 // Test effectors
    FFTEffector ef = null;
-  PanPercFilter filter = null;
+   PanPercFilter filter = null;
    switch(args[1]){
      case "FFTTEST":
        ef = new FFTEffector(FFTEffector.TYPE_FFTTEST); // OK (3/1)
@@ -86,7 +89,8 @@ public class StereoPSTest {
      filter = new PanPercFilter();
      filter.loadContent("split.flt");
      ef = new FFTEffector(FFTEffector.TYPE_STEREO_PERCSPLIT); // OK??
-     ef.setPanPercFilter(filter);
+     recordPeakOnly = true;
+     ef.setPanPercFilter(filter,recordPeakOnly);
      ef.setSamplingRate(44100);
      ef.setParam(FFTEffector.OP_MIX, 1f);
      break;
@@ -114,7 +118,7 @@ public class StereoPSTest {
 
        if (ret > 0){
          for (int i=0; i < ret; i++) out[i] = (byte) obuf.get(i);
-         bos.write(out,0,ret); 
+         if(!recordPeakOnly) bos.write(out,0,ret); 
          obuf.clear();
        }
 
@@ -126,7 +130,7 @@ public class StereoPSTest {
      while ((ret = ef.process(null,-1,obuf)) > 0){
        System.err.println("got(ret) " + ret);
        for (int i=0; i < ret; i++) out[i] = obuf.get(i);
-       bos.write(out,0,ret); 
+       if(!recordPeakOnly) bos.write(out,0,ret); 
        obuf.clear();
      }
 
@@ -141,6 +145,8 @@ public class StereoPSTest {
      Utils.rawToWaveFile("tmp.raw","out.wav", true); 
         // true for delete input file
      System.err.println("Done");
+
+     if(recordPeakOnly && filter != null) filter.printPeaks();
 
    } catch (IOException e) { e.printStackTrace(); } 
 

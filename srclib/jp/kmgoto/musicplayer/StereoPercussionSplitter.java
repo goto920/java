@@ -54,10 +54,13 @@ public class StereoPercussionSplitter {
 
   private PanPercFilter filter;
   private int[][] verdictArray; 
-  public void setPanPercFilter(PanPercFilter filter){ 
+
+  private boolean recordPeakOnly;
+  public void setPanPercFilter(PanPercFilter filter, boolean recordPeakOnly){ 
     this.filter = filter; 
     filter.setFourierIndex(WINDOW_SIZE, SAMPLING_RATE);
-    verdictArray = filter.getVerdictArray();
+//    verdictArray = filter.getVerdictArray();
+      this.recordPeakOnly = recordPeakOnly;
   }
 
   public void setSamplingRate(int value){
@@ -166,24 +169,21 @@ public class StereoPercussionSplitter {
         pSqL = p[L][i]*p[L][i]; hSqL = h[L][i]*h[L][i];
         pSqR = p[R][i]*p[R][i]; hSqR = h[R][i]*h[R][i];
 
-/*
-      int verdict = PanPercFilter.SPLIT;
-      if (filter != null) {
-          verdict = filter.getVerdict(i,pan[i]); 
-      }
-*/
-     int verdict;
-     if (filter != null){
-      int panIndex = ((int) ((pan[i] + 1f)*(verdictArray[0].length -1)) + 1)/2;
-      verdict = verdictArray[i][panIndex]; 
-     }
-     else verdict = PanPercFilter.SPLIT;
+     int verdict = PanPercFilter.SPLIT;
+
+     if (recordPeakOnly){
+       float percRatio =  
+                (1 - pan[i])/2f*pSqL/(pSqL + hSqL) 
+              + (1 + pan[i])/2f*pSqR/(pSqR + hSqR);
+       filter.recordPeaks(i,pan[i],percRatio);
+     } else 
+       verdict = filter.getVerdict(i,pan[i]); 
 
       switch(verdict){
          case PanPercFilter.SPLIT:
            if (mix > 0.5f){ 
-             ratioL = hSqL/(pSqL + hSqL);
-             ratioR = hSqR/(pSqR + hSqR);
+             ratioL = (hSqL + 2*(1-mix)*pSqL)/(pSqL + hSqL);
+             ratioR = (hSqR + 2*(1-mix)*pSqR)/(pSqR + hSqR);
            } else { 
              ratioL = (pSqL + 2*mix*hSqL)/(pSqL + hSqL); 
              ratioR = (pSqR + 2*mix*hSqR)/(pSqR + hSqR); 
@@ -323,7 +323,20 @@ public class StereoPercussionSplitter {
               panAmp[i] = absL - absLR;
            }
            pan[i] = (1-frac)/(1+frac);
-        }
+         } else { // absL >= absR
+           if (dotProd < 0) {
+             frac = 0f;
+              panAmp[i] = absLR - absR;
+           } else if (dotProd <= absL*absL){
+             frac = dotProd/(absL*absL);
+              panAmp[i] = Math.max(absR, absLR) - Math.abs(crossProd)/absL;
+           } else {
+             frac = 1f;
+              panAmp[i] = absR - absLR;
+           }
+           pan[i] = (frac-1)/(1+frac);
+         }
+
       } // end for i
     //  return;
    } // End calcPan

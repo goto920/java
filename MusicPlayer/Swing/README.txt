@@ -284,3 +284,23 @@ http://abondar-howto.blogspot.jp/2010/06/howto-unload-jar-files-loaded-by.html
 ConverterThreadの仕様変更 -- wavファイルを処理
 
 +++++++++++++
+audio tutorialをもう一度
+
+https://docs.oracle.com/javase/tutorial/sound/playing.html
+SouceDatalineをstart()する前にwriteできる? 再生開始を少し遅らせる。
+stopでとめてstartで続きが可能。
+
+使えなかったVolumeの機能を再確認
+https://docs.oracle.com/javase/tutorial/sound/controls.html
+
+Mixerでコントロールできるか?
+Lineでコントロールできるか?
+
+終了は
+ line.drain();
+ line.stop();
+ line.close();
+ line = null;
+の順
+++++++++++++++++++++++++++
+

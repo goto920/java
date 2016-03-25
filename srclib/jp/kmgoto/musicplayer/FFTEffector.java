@@ -95,9 +95,17 @@ public class FFTEffector {
 
     public void setPanPercFilter(PanPercFilter filter){
        if (type == TYPE_STEREO_PERCSPLIT)
-          stereoPercussionSplitter.setPanPercFilter(filter);
-         else if (type == TYPE_PANCANCEL)
+          stereoPercussionSplitter.setPanPercFilter(filter,false);
+       else if (type == TYPE_PANCANCEL)
           panCanceler.setPanPercFilter(filter);
+    }
+
+    public void setPanPercFilter(PanPercFilter filter, boolean recordOnly){
+       if (type != TYPE_STEREO_PERCSPLIT) return;
+       stereoPercussionSplitter.setPanPercFilter(filter,true);
+       filter.enableRecord();
+       filter.setNumPanRanges(21);
+       // record only
     }
 
     public void setSamplingRate(int value){
