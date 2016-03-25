@@ -12,9 +12,16 @@ public class PanPercFilter {
     private String[][] data; 
     private int[] findex; // fourierIndex to data index
     private int windowSize;
+    private float[][] percPeaks;
+    private boolean recordPeaks;
 
     public PanPercFilter(){
        windowSize = 4096;
+       recordPeaks = false;
+    }
+
+    public void enableRecord(){
+      recordPeaks = true;
     }
 
     public void setFreqRanges(float[] ranges){
@@ -23,6 +30,13 @@ public class PanPercFilter {
 
     public void setNumPanRanges(int num){
       numPanRanges = num;
+      if (recordPeaks){ 
+        percPeaks = new float[windowSize/2+1][numPanRanges];
+        for (int freqIndex =0; freqIndex <= windowSize/2; freqIndex++)
+          for (int panIndex =0; panIndex < numPanRanges; panIndex++)
+            percPeaks[freqIndex][panIndex] = 0f;
+ 
+      }
     }
    
     public void setData(String[][] inputData){
@@ -68,16 +82,34 @@ public class PanPercFilter {
     public int getVerdict(int freqIndex, float pan){
 
        int i = findex[freqIndex]; // fourierIndex to data index
-       int j = ((int) ((pan + 1f)*(numPanRanges-1)) + 1)/2;
-       if (data[i][j].equals("t")){
+       int panIndex = ((int) ((pan + 1f)*(numPanRanges-1)) + 1)/2;
+       if (data[i][panIndex].equals("t")){
            return THROUGH;
-       } else if (data[i][j].equals("c")){
+       } else if (data[i][panIndex].equals("c")){
            return CANCEL;
-       } else if (data[i][j].equals("s")){
+       } else if (data[i][panIndex].equals("s")){
            return SPLIT;
-       }
+       } 
 
        return THROUGH;
+    }
+
+    public void recordPeaks(int freqIndex, float pan, float percRatio){
+//       System.err.println(freqIndex +" " +  pan + " " + percRatio);
+       if(!recordPeaks) return;
+       int panIndex = ((int) ((pan + 1f)*(numPanRanges-1)) + 1)/2;
+       if (percRatio > percPeaks[freqIndex][panIndex])
+               percPeaks[freqIndex][panIndex] = percRatio;
+    }
+
+    public void printPeaks(){
+      if (!recordPeaks) return;
+
+      for (int panIndex =0; panIndex < numPanRanges; panIndex++)
+        for (int freqIndex =0; freqIndex <= windowSize/2; freqIndex++)
+           System.out.println(
+             panIndex + ", " + freqIndex + ", " 
+               + percPeaks[freqIndex][panIndex]);
     }
 
     public void printContent(){
