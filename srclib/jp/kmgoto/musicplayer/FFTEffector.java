@@ -63,6 +63,7 @@ public class FFTEffector {
         switch (type) {
           case TYPE_PANCANCEL:
              panCanceler = new PanCanceler();
+             System.out.println("PanCanceler");
              break;
           case TYPE_PERCSPLIT:
              leftM  = new PercussionSplitter(17); 
@@ -347,13 +348,15 @@ public class FFTEffector {
       }  else max = WINDOW_SIZE/4;
 
       output.clear();
+
+   // 5 % mergin to prevent clip by FFT computational error
       for (int i = 0; i < max; i++){
          int base = 4*i;
-         int sample = (int) ((float) outputBuffer.get(2*i)); // Left
+         int sample = (int) ((float) (0.95*outputBuffer.get(2*i))); // Left
          output.add(base,(byte) (sample & 0xff)); // LE
          output.add(base+1, (byte) (0xff & sample/256));
 
-         sample = (int) ((float) outputBuffer.get(2*i+1)); // Right
+         sample = (int) ((float) (0.95*outputBuffer.get(2*i+1))); // Right
          output.add(base+2,(byte) (sample & 0xff));
          output.add(base+3,(byte) (0xff & sample/256));
        } // end for

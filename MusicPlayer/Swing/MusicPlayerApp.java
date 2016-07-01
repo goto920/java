@@ -20,7 +20,7 @@ import jp.kmgoto.musicplayer.swing.PlayerThread;
 class MusicPlayerApp extends JFrame 
   implements ActionListener, ChangeListener {
 
-  private static final long serialVersionUID = 20160316;
+  private static final long serialVersionUID = 20160401;
   private Locale locale;
   private static String Top_help, Player_help, PanCanceler_help,
      PercussionSplitter_help;

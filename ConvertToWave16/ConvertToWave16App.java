@@ -15,7 +15,7 @@ import jp.kmgoto.musicplayer.swing.ConvertToWave;
 class ConvertToWave16App extends JFrame 
   implements ActionListener {
 
-  private static final long serialVersionUID = 20160316;
+  private static final long serialVersionUID = 20160401;
   private Locale locale;
 
   private JFrame frame; // for pack() 

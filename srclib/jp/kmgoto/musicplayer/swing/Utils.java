@@ -135,7 +135,8 @@ public class Utils {
     bos.write(data_id,0,data_id.length);
        total += data_id.length;
 
-    byte[] data_size = Utils.intToLEbytes(datalen, 4); 
+    byte[] data_size = Utils.intToLEbytes(datalen/2, 4); 
+        // #samples per channel 
     bos.write(data_size,0,data_size.length); 
        total += data_size.length;
     } catch (Exception e) { e.printStackTrace();}
