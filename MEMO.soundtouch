@@ -1,0 +1,329 @@
+soundtouch/
+
+/// 'FIFOSamplePipe' : An abstract base class for classes that manipulate sound
+/// samples by operating like a first-in-first-out pipe: New samples are fed
+/// into one end of the pipe with the 'putSamples' function, and the processed
+/// samples are received from the other end with the 'receiveSamples' function.
+///
+/// 'FIFOProcessor' : A base class for classes the do signal processing with 
+/// the samples while operating like a first-in-first-out pipe. When samples
+/// are input with the 'putSamples' function, the class processes them
+/// and moves the processed samples to the given 'output' pipe object, which
+
+1) include/FIFOSamplePipe.h
+
+abstruct base classes
+
+ FIFOSamplePipe
+    virtual SAMPLETYPE *ptrBegin() = 0;
+    virtual void putSamples
+    void moveSamples()
+    virtual uint receiveSamples 
+    virtual uint numSamples()
+    virtual int isEmpty()
+    virtual void clear() 
+    virtual uint adjustAmountOfSamples(uint numSamples)
+
+    FIFOProcessor : public FIFOSamplePipe
+     protected: 
+       void setOutPipe(FIFOSamplePipe *pOutput)
+       FIFOProcessor()
+       FIFOProcessor(FIFOSamplePipe *pOutput )
+       virtual ~FIFOProcessor()
+       virtual SAMPLETYPE *ptrBegin()
+     public:
+       virtual uint receiveSamples()
+       virtual uint numSamples() const
+       virtual int isEmpty() const
+       virtual uint adjustAmountOfSamples()
+
+2) include/FIFOSampleBuffer.h
+   SoundTouch/FIFOSampleBuffer.cpp (impl)
+
+/// A buffer class for temporarily storaging sound samples, operates as a 
+/// first-in-first-out pipe.
+///
+/// Samples are added to the end of the sample buffer with the 'putSamples' 
+/// function, and are received from the beginning of the buffer by calling
+/// the 'receiveSamples' function. The class automatically removes the 
+/// output samples from the buffer as well as grows the storage size 
+/// whenever necessary.
+
+class FIFOSampleBuffer : public FIFOSamplePipe
+  private:
+     SAMPLETYPE *buffer;
+     ....
+     uint channels;
+     ..
+    rewind(), ensurecapacity(), getCapacity() ...
+
+  public:
+    FIFOSampleBuffer(int numChannels = 2);
+    virtual SAMPLETYPE *ptrBegin();
+    SAMPLETYPE *ptrEnd() ??
+
+    virtual void putSamples(const SAMPLETYPE *samples, uint numSamples)
+    virtual void putSamples(uint numSamples)?? 
+    virtual uint receiveSamples(*out, max)
+
+    virtual uint numSamples() const;
+    void setChannels(int numChannels);
+    int getChannels() 
+    virtual int isEmpty() const; 
+    virtual void clear();
+   uint adjustAmountOfSamples(uint numSamples);
+   
+   
+
+3) source/SoundTouch/TDStretch.h
+
+ class TDStretch : public FIFOProcessor -- general implementation
+   public:
+         TDStretch();
+         virtual ~TDStretch();
+         static TDStretch *newInstance(); -- for MMX/SSE
+         FIFOSamplePipe *getOutput() { return &outputBuffer; }
+         FIFOSamplePipe *getInput() { return &inputBuffer; };
+         void setTempo(double newTempo);
+         void clearInput();
+         void setChannels(int numChannels);
+         void enableQuickSeek(bool enable);
+         void setParameters(int sampleRate,          
+            ///< Samplerate of sound being processed (Hz)
+             int sequenceMS = -1,     
+            ///< Single processing sequence length (ms)
+             int seekwindowMS = -1,   
+            ///< Offset seeking window length (ms)
+            int overlapMS = -1       
+            ///< Sequence overlapping length (ms)
+           );
+       void getParameters(int *pSampleRate, int *pSequenceMs, 
+       int *pSeekWindowMs, int *pOverlapMs) const;
+       virtual void putSamples(
+            const SAMPLETYPE *samples,  ///< Input sample data
+            uint numSamples                         ///< Number of samples in 'samples' so that one sample
+                                                    ///< contains both channels if stereo
+            );
+    int getInputSampleReq() const
+    int getOutputBatchSize() const
+
+-----------------------------
+TDStretch.cpp
+
+  // Table for the hierarchical mixing position seeking algorithm
+  const short _scanOffsets[5][24]={}; // not used??
+
+  TDStretch::TDStretch() : FIFOProcessor(&outputBuffer) {
+      // set parameters
+  setParameters(44100, 
+     DEFAULT_SEQUENCE_MS, -- USE_AUTO (0)
+     DEFAULT_SEEKWINDOW_MS, -- USE_AUTO (0)
+     DEFAULT_OVERLAP_MS -- 8 (ms) 
+   );
+         -- void TDStretch::calcSeqParameters() 
+         --  calculateOverlapLength(overlapMs);
+         -- setTempo(tempo);
+
+  }
+
+int TDStretch::seekBestOverlapPosition(const SAMPLETYPE *refPos)
+    return seekBestOverlapPositionFull(refPos); -- stereo
+       --  bestCorr = calcCrossCorr(refPos, pMidBuffer, norm);
+           for (i = 1; i < seekLength; i ++) 
+           {
+             corr = calcCrossCorrAccumulate(refPos + channels * i, 
+                 pMidBuffer, norm);
+                         if (corr > bestCorr)
+            {
+                bestCorr = corr;
+                bestOffs = i;
+            }
+           }
+
+           return bestOffs;
+
+int TDStretch::seekBestOverlapPositionQuick(const SAMPLETYPE *refPos)
+ -- quick algorithm (quite good?)
+
+/// Calculates processing sequence length according to tempo setting
+void TDStretch::calcSeqParameters()
+
+void TDStretch::processNominalTempo() -- through (not used?)
+
+// Processes as many processing frames of the samples 'inputBuffer', store
+// the result into 'outputBuffer'
+void TDStretch::processSamples()
+     while ((int)inputBuffer.numSamples() >= sampleReq) 
+    {
+        offset = seekBestOverlapPosition(inputBuffer.ptrBegin());
+        overlap(outputBuffer.ptrEnd((uint)overlapLength), 
+           inputBuffer.ptrBegin(), (uint)offset);
+        outputBuffer.putSamples((uint)overlapLength);
+       temp = (seekWindowLength - 2 * overlapLength);
+        outputBuffer.putSamples(inputBuffer.ptrBegin() 
+          + channels * (offset + overlapLength), (uint)temp);
+
+       memcpy(pMidBuffer, inputBuffer.ptrBegin() + channels * (offset + temp + overlapLength), 
+            channels * sizeof(SAMPLETYPE) * overlapLength);
+         inputBuffer.receiveSamples((uint)ovlSkip);
+    }
+
+void TDStretch::putSamples(const SAMPLETYPE *samples, uint nSamples)
+{
+    // Add the samples into the input buffer
+    inputBuffer.putSamples(samples, nSamples);
+    // Process the samples in input buffer
+    processSamples();
+}
+
+inline void TDStretch::overlap(SAMPLETYPE *pOutput, const SAMPLETYPE *pInput, uint ovlPos) const
+  overlapMono(pOutput, pInput + ovlPos);
+  overlapStereo(pOutput, pInput + 2 * ovlPos);
+  overlapMulti(pOutput, pInput + channels * ovlPos);
+
+void TDStretch::calculateOverlapLength(int aoverlapMs)
+double TDStretch::calcCrossCorrAccumulate(const short *mixingPos, const short *compare, double &norm)
+
+// float
+void TDStretch::overlapStereo(float *pOutput, const float *pInput) const
+{
+    int i;
+    float fScale;
+    float f1;
+    float f2;
+
+    fScale = 1.0f / (float)overlapLength;
+
+    f1 = 0;
+    f2 = 1.0f;
+
+    for (i = 0; i < 2 * (int)overlapLength ; i += 2) 
+    {
+        pOutput[i + 0] = pInput[i + 0] * f1 + pMidBuffer[i + 0] * f2;
+        pOutput[i + 1] = pInput[i + 1] * f1 + pMidBuffer[i + 1] * f2;
+
+        f1 += fScale;
+        f2 -= fScale;
+    }
+
+++++++++++++++++++++++++++++++++++     
+ class TDStretchMMX : public TDStretch -- 16bit int samples optimized
+        double calcCrossCorr()
+        double calcCrossCorrAccumulate();
+        virtual void overlapStereo(short *output, const short *input) const;
+        virtual void clearCrossCorrState();
+        
+ class TDStretchSSE : public TDStretch -- float SSE optimized routines 
+        double calcCrossCorr()
+        double calcCrossCorrAccumulate();
+
+++++++++++++++
+int main(const int nParams, const char * const paramStr[])
+
+          // Parse command line parameters
+        params = new RunParameters(nParams, paramStr);
+
+        // Open input & output files
+        openFiles(&inFile, &outFile, params);
+
+        if (params->detectBPM == true) detectBPM(inFile, params);
+
+        setup(&soundTouch, inFile, params);
+        process(&soundTouch, inFile, outFile);
+
+ return 0;
+
++++++++++++++++
+static void process(SoundTouch *pSoundTouch, WavInFile *inFile, WavOutFile *outFile)
+    while (inFile->eof() == 0){
+       int num;
+        // Read a chunk of samples from the input file
+        num = inFile->read(sampleBuffer, BUFF_SIZE);
+        nSamples = num / (int)inFile->getNumChannels();
+
+        // Feed the samples into SoundTouch processor
+        pSoundTouch->putSamples(sampleBuffer, nSamples);
+
+
+        do {
+           nSamples 
+            = pSoundTouch->receiveSamples(sampleBuffer, buffSizeSamples);
+            outFile->write(sampleBuffer, nSamples * nChannels);
+        } while (nSamples !=0); 
+
+        pSoundTouch->flush();
+        do 
+        {
+        nSamples = pSoundTouch->receiveSamples(sampleBuffer, buffSizeSamples);
+        outFile->write(sampleBuff
+        }
+
+++++++++++++++++++++++++++++++
+include/SoundTouch.h
+
+class SoundTouch : public FIFOProcessor
+{
+
+public:
+     /// Sets new rate control value. Normal rate = 1.0, smaller values
+    /// represent slower rate, larger faster rates.
+
+    void setRate(double newRate);
+    void setTempo(double newTempo);
+    void setRateChange(double newRate);
+    void setTempoChange(double newTempo);
+
+    void setPitch(double newPitch);
+    void setPitchOctaves(double newPitch);
+    void setPitchSemiTones(int newPitch);
+    
+    void setChannels(uint numChannels);
+    void setSampleRate(uint srate);
+    
+    void flush();
+    virtual void putSamples();
+    virtual uint receiveSamples();
+    bool setSetting();
+    int getSetting(); 
+
+sources/SoundTouch/SoundTouch.cpp     
+
+#include "SoundTouch.h"
+#include "TDStretch.h"
+#include "RateTransposer.h"
+#include "cpu_detect.h"
+
+#define TEST_FLOAT_EQUAL(a, b)  (fabs(a - b) < 1e-10)
+
+SoundTouch::SoundTouch()
+{
+    // Initialize rate transposer and tempo changer instances
+
+    pRateTransposer = new RateTransposer();
+    pTDStretch = TDStretch::newInstance();
+
+    setOutPipe(pTDStretch);
+    calcEffectiveRateAndTempo();
+
+}
+
+void SoundTouch::putSamples(const SAMPLETYPE *samples, uint nSamples)
+           // evaluate the tempo changer, then transpose the rate up, 
+        assert(output == pRateTransposer);
+        pTDStretch->putSamples(samples, nSamples);
+        pRateTransposer->moveSamples(*pTDStretch);
+
+uint SoundTouch::receiveSamples(SAMPLETYPE *output, uint maxSamples)
+{
+        uint ret = FIFOProcessor::receiveSamples(output, maxSamples);
+        samplesOutput += (long)ret;
+        return ret;
+}
+
+uint SoundTouch::receiveSamples(uint maxSamples)
+{
+        uint ret = FIFOProcessor::receiveSamples(maxSamples);
+        samplesOutput += (long)ret;
+        return ret;
+}
+
