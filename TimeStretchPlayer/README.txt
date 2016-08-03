@@ -1,5 +1,12 @@
 Working directory
 
+Compilation: 
+javac -cp ../jarlib/JTransforms-3.1-with-dependencies.jar:../jarlib/jl1.0.1.jar:. *.java
+Execution:
+java -cp ../jarlib/JTransforms-3.1-with-dependencies.jar:../jarlib/jl1.0.1.jar:. TimeStretchPlayer
+
+
+
 +++++++++++
 目標: TimeStretchPlayer
 
