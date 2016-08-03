@@ -58,11 +58,9 @@ public class PlayWaveFile implements Runnable {
     gain = intGain/100f;
   }
 
-/*
   public void setSkip(float skipSec){ 
      skipTo = (long) ((skipSec*sampleRate)*frameSize); 
   }
-*/
 
  public synchronized float stopPlay(){
 //  public float stopPlay(){
