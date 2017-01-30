@@ -1,41 +1,68 @@
 # java
-Programming practice of GUI and stereo music processing.
-Executable jar files are in executables/ (java -jar jarfile)
+Programming practice of Java GUI and music sound processing.
 
-ConvertToWaveApp.jar : Convert mp3, mp4, m4a, aac, 24bit wav to 16bit wav (audio only)
-
-MusicPlayerAppSwing.jar : Play, Cancel vocal by freq and pan, 
-     or Split percussive and harmonic sound (16bit stereo wav input file only)
-
-Currently executable jar files are only for Java 8 Runtime Environment (latest) 
- (Also worked with Ubuntu openjdk-7)
-
-Build (on Linux or Mac OS X):
-  cd build/
-  sh makeMusicPlayer.app
-
-Copy build/MusicPlayer.jar to desired directly.
+Executable jar files are in bin/
 
 Execution:
-  As command line
-    java -jar MusicPlayer.jar 
+  Just click the file icon on Windows.
 
-  or just click the file on Windows
+  Or as a command line on Windows, Linux, Mac OS X
+    java -jar xxx.jar 
 
+Note: javac 1.7.0_121 (openJDK on Ubuntu 14.04LTS)  
+Known bugs:   
+      On Windows, sound device names are not correctly shown
+      if the system language is not English. It looks like
+      a bug in sound API in Java RE.
+
+List of programs
+
+1) ConvertToWave16App.jar
+
+   Audio file converter for the following programs,
+   just in case you do not have a converter
+ 
+   Input: mp4 video, mp4 audio (m4a, mp4, aac), mp3, 24bit wave
+   Output: always 16bit wave audio
+
+2) TimePitchPlayerApp.jar
+
+   Variable time and pitch music player.
+   Input: 16bit 44.1kHz stereo wave file only. 
+
+   Real time playback or save the converted sound to a file.
+   Output: 16bit 44.1kHz stereo wave file
+
+3) FilteredPlayerApp.jar
+   Input: 16bit 44.1kHz stereo wave only. 
+
+   Extract or delete some part of stereo music 
+   by frequency range, LR position(pan), percussive/harmonic separation.
+   Playback or save to file.
+
+   This may be useful to make karaoke, drum suppressed music for
+   musical skill training.
+   
+   In the filter window, choose  
+   T(hrough), M(ute), P(ercussive), H(armonic) 
+   or use Presets (karaokeMale or drumCover) and modify the filter.
+   Customized filter can be saved in a binary file using Java object
+   serialization.
+
+ Note: Split is not implemented yet.
+   This application is quite CPU intensive.
+   Playback delay is intensionaly to have good sound quality.
+
+4) FeedbackBoosterApp2.jar
+
+   Feedback booster for electric guitar.
+   Equipments: Dynamic mic in front of a guitar amp
+          Audio I/O interface
+          Small audio power amp
+          Vibration speaker (exciter)
+
+   See docs/FeedbackBoosterApp-howto.html
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Directory structure
- executables/ -- pre-compiled applications (may not work for older java RE)
- build/ -- build sh script etc. MusicPlayerAppSwing.jar
- jarlib/ -- dependent java libraries (jar files)
- MusicPlayer/ -- source code of the main GUI
-    Android/ -- Must be compiled with Android SDK 
-    Swing/   -- plain java source
-    Tests/   -- some experimental programs
-
- ConverToWav16/ -- audio file converter source code for the main GUI
-
- srclib/jp/kmgoto/musicplayer/ -- support package library source codes
-  *.java -- common sources
-  android/ -- for android only
-  swing/   -- for Swing
 
 End of description
