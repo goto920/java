@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<META charset="UTF-8">
+<TITLE>Feedback Booster App</TITLE>
+</HEAD>
+<BODY>
+<H1>Feedback Booster App</H1>
+
+<H2>1. Equipments</H2>
+
+<OL>
+<LI>Vibration Speaker (Exciter) with amp
+<LI>Small guitar amp
+<LI>Microphone
+<LI>Audio Interface<BR> 
+PC built-in Mic and headphone out can be used but not recommended
+because mic should be close to the guitar amp.
+</OL>
+
+<H2>2. Connection</H2>
+
+<PRE>
+Location of vibration speaker: head of the neck or body 
+
+Guitar ----&gt; Guitar Amp ----&gt; Mic or amp line/headphone output 
+vib. SP                         |
+   ^                            | input
+   |                            V
+   +--------------- Audio Interface (PC)
+       output
+</PRE>
+<HR>
+<H2>3. Controls</H2>
+
+<HR>
+<IMG SRC="FeedbackBoosterApp.png">
+<HR>
+
+<H3>A. unprocessed feedback</H3>
+
+<OL>
+<LI>Choose input (audio) port
+<LI>Choose output (audio) port -- audio I/O starts
+<LI>Adjust volume to have feedback
+</OL>
+
+<H3>B. Manually Equalized feedback</H3>
+
+Choose input and output(audio) port as in A.
+
+<OL>
+<LI>press "bypass" button
+<LI>Adjust peakHz, eQGain, and Q
+<LI>Adjust OctMix (-1 is for fundamental freq only, 1 is one octave up only)
+<LI>Adjust Comp<BR>
+Default: Ratio 1 and Threshold 0 denotes no comp
+<OL>
+<LI>Adjust CompGain not to Clip(red)
+<LI>Turn up compRatio to 2 or more 
+<LI>Turn down CompThreash to -20, 40dB (COMP(green) denotes comp is effective)
+</OL>
+<LI>Adjust volume
+</OL>
+
+<H3>C. Automatically Equalized feedback</H3>
+
+<OL>
+<LI>Press "manualEQ" to switch to AutoEQ mode.<BR>
+Then peakHz becomes automatic,<BR>
+peakHz slider will be disabled, <BR>
+and detected pitch(freq) will be shown.
+<LI>The other controls are same as in B.
+</OL>
+
+<HR>
+</BODY>
+</HTML>
