@@ -1,0 +1,10 @@
+http://www.atmarkit.co.jp/ait/articles/0502/25/news123.html
+
+java -Xmx240m ヒープ最大値指定
+     -Xprof
+     -verbose:gc  Full GC
+     -agentlib:hprof
+
+jmeter?
+jhat, jconsole, (jmap)
+

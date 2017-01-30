@@ -1,0 +1,183 @@
+import jp.kmgoto.music.*;
+
+public class TimeStretch extends BufferedEffector {
+
+  private int overlapLength;
+  private int seekLength;
+  private int seekWindowLength;
+/*
+    int overlapDividerBitsNorm;
+    int overlapDividerBitsPure;
+    int slopingDivider;
+*/
+  private int sequenceMs;
+  private int seekWindowMs;
+  private int overlapMs = 8;
+  private int intskip;
+  private int sampleReq;
+
+  private float tempo = 1f;
+  private int maxnorm = 0;
+  private float maxnormf = 1f;
+
+  private int comparePosition;
+
+  public TimeStretch(int channels, float samplingRate){
+     super(channels,samplingRate);
+     outLimit = 0;
+     added = 0;
+     flushing = false;
+     setParameters(); 
+     setTempo(1f);
+  }
+
+  private void setParameters(){
+
+
+    float AUTOSEQ_AT_MIN  = 125.0f;
+    float AUTOSEQ_AT_MAX  = 50.0f;
+    float AUTOSEQ_TEMPO_LOW =  0.5f;     // auto setting low tempo range (-50%)
+    float AUTOSEQ_TEMPO_TOP =  2.0f;     // auto setting top tempo range (+100%)
+
+    float AUTOSEQ_K  
+       = ((AUTOSEQ_AT_MAX - AUTOSEQ_AT_MIN) / 
+          (AUTOSEQ_TEMPO_TOP - AUTOSEQ_TEMPO_LOW));
+    float AUTOSEQ_C 
+       = (AUTOSEQ_AT_MIN - (AUTOSEQ_K) * (AUTOSEQ_TEMPO_LOW));
+
+
+    float AUTOSEEK_AT_MIN  = 25.0f;
+    float AUTOSEEK_AT_MAX  = 15.0f;
+    float AUTOSEEK_K  
+     = ((AUTOSEEK_AT_MAX - AUTOSEEK_AT_MIN)
+          / (AUTOSEQ_TEMPO_TOP - AUTOSEQ_TEMPO_LOW));
+    float AUTOSEEK_C  
+       = (AUTOSEEK_AT_MIN - (AUTOSEEK_K) * (AUTOSEQ_TEMPO_LOW));
+    
+    float seq = AUTOSEQ_C + AUTOSEQ_K * tempo;
+     if (seq < AUTOSEQ_AT_MIN) seq = AUTOSEQ_AT_MIN;
+     else if (seq > AUTOSEQ_AT_MAX) seq = AUTOSEQ_AT_MAX;
+    sequenceMs = (int)(seq + 0.5);
+
+    float seek = AUTOSEEK_C + AUTOSEEK_K * tempo;
+    if (seq < AUTOSEEK_AT_MIN) seq = AUTOSEEK_AT_MIN;
+     else if (seq > AUTOSEEK_AT_MAX) seq = AUTOSEQ_AT_MAX;
+
+    int oldOVerlapLength = overlapLength;
+
+    overlapLength = (int) (samplingRate * overlapMs/1000);
+    seekWindowMs = (int)(seek + 0.5);
+    seekWindowLength = (int) ((samplingRate * sequenceMs) / 1000);  
+ 
+   if (overLapLength > oldOverlapLength * 8){ 
+     pMidBuffer = new float[overlapLength *8];
+     pRefMidBuffer = new float[overlapLength *8];
+   }
+   float nominalSkip = tempo * (seekWindowLength - overlapLength);
+
+   intskip = (int) (nominalSkip + 0.5);
+
+    if (seekWindowLength < 2 * overlapLength){ 
+      seekWindowLength = 2 * overlapLength;
+      seekLength = (int) (samplingRate * seekWindowMs/1000);
+    }
+
+    sampleReq = Math.max(intskip + overlapLength, seekWindowLength);
+
+  }
+
+  private void acceptNewOverlapLength(int newOverlapLength){
+  }
+
+
+  private float calcCrossCorr(float[] mixingPos, float[] compare, int offset){
+      float corr = 0f;
+      float norm = 0f;
+      for (int i=1; i < overlapLength; i++){
+        corr += mixingPos[i] * compare[i + offset];
+        norm += mixingPos[i] * mixingPos[i];
+      }
+      return (float) (corr/Math.pow(norm,0.5));
+  }
+
+/*
+  private float calcCrossCorrAccumulate(){
+  }
+*/
+
+  private float[] pMidBuffer;
+  private float[] pRefBuffer;
+
+  private int seekBestOverlapPosition(int position){
+
+    float bestCorr = -10;
+    int bestOffset = 0;
+
+    for (int tempOffset = 0; tempOffset < seekLength; tempOffset++) {
+       int comparePosition = position + tempOffset;
+       float buf[], buf2[];
+       float currentCorr = calcCrossCorr(buf, buf2, comparePosition);
+       float tmp = (float) ((2*tempOffset - seekLength) / seekLength);
+       if (currentCorr > bestCorr) {
+          bestCorr = currentCorr;
+          bestOffset = tempOffset;
+       }
+    }
+  
+    return bestOffset;
+  }
+
+  private void overlap(float output, float input){
+  }
+
+@Override
+  public float[] getSamples(){
+
+    if (flushing) outLimit = outputBuffer.size() - added;
+
+    Float[] out = outputBuffer.subList(0, outLimit).toArray(new Float[0]);
+    float[] retval = new float[outLimit];
+
+    for (int i = 0; i < outLimit; i++) retval[i] = (float) out[i];
+    if (flushing) outputBuffer.clear();
+    else {
+      outputBuffer.subList(0, outLimit).clear();
+      outLimit = 0;
+    }
+
+    return retval;
+  }
+
+@Override
+  public void flush(){
+   //   added = channels*windowSize - inputBuffer.size();
+    for (int i = 0; i < added; i++) inputBuffer.add(0f);
+    flushing = true;
+    process();
+  }
+
+  public void setTempo(float newTempo){
+    int intskip;
+    tempo = newTempo;
+    setParameters();
+    float nominalSkip = tempo * (seekWindowLength - overlapLength);
+    intskip = (int)(nominalSkip + 0.5);
+    sampleReq 
+     = Math.max(intskip + overlapLength, seekWindowLength) + seekLength;
+ 
+  }
+
+@Override
+  protected void process(){
+     int ovlSkip, offset;
+     int temp;
+     while (inputBuffer.size() >= sampleReq)
+     {
+     }
+  }
+
+  public static void main(String[] args){
+     TimeStretch ts = new TimeStretch(2, 44100f);
+  }
+
+}
