@@ -41,7 +41,8 @@ List of programs
    Playback or save to file.
 
    This may be useful to make karaoke, drum suppressed music for
-   musical skill training.
+   musical skill training. Extracting one instrument might be possible
+   if the freq, pan range of the instrument is in good separation.
    
    In the filter window, choose  
    T(hrough), M(ute), P(ercussive), H(armonic) 
@@ -52,8 +53,9 @@ List of programs
  Note: Split is not implemented yet.
    This application is quite CPU intensive.
    Playback delay is intensionaly to have good sound quality.
+   Automatic filter and splitter is work in progress.
 
-4) FeedbackBoosterApp2.jar
+4) FeedbackBoosterApp2.jar (work in progress)
 
    Feedback booster for electric guitar.
    Equipments: Dynamic mic in front of a guitar amp
@@ -62,7 +64,23 @@ List of programs
           Vibration speaker (exciter)
 
    See docs/FeedbackBoosterApp-howto.html
+
+  Note: Audio input latency is not short enough especially on Windows.
+        Workaround is in developement.
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Directory structure
 
+MusicTools/src/ -- source code and dependent library classes
+               jp/kmgoto/music/ -- my library
+
+BACK/Android/ -- experimental code for drum suppressor for Android
+    /ConvertToWave16/ -- source code for ConvertToWave16.jar 
+    /MusicPlayer/ -- experimental code (not interested)
+    /srclib/ -- source code of my old library
+    /TimeStretchPlayer/ -- older version of TimePitchPlayer 
+             without variable pitch function
+    /jarlib/ -- library jar files 
+
 End of description
+++++++++++++++++++++++++++++++
