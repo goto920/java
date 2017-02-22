@@ -1,12 +1,12 @@
 Java programming practice of GUI and music sound processing.
 
-Executable jar files are in bin/
+Executable jar files for downloaded are in bin/
 
 Execution:
 
-  Just click the file icon on Windows.
+  Just click the file icon on Windows,
 
-  Or as a command line on Windows, Linux, Mac OS X
+  or as a command line on Windows, Linux, Mac OS X
 
     java -jar xxx.jar 
 
