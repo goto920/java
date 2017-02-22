@@ -10,7 +10,7 @@ Execution:
 
     java -jar xxx.jar 
 
-Note: javac 1.7.0_121 (openJDK on Ubuntu 14.04LTS)  
+Note: Programs are compiled with javac 1.7.0_121 (openJDK on Ubuntu 14.04LTS)  
 
 Known bugs:   
       On Windows, sound device names are not correctly shown
