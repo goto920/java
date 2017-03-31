@@ -415,8 +415,9 @@ class FeedbackBoosterPlayer implements Runnable {
   public void setVolume(float vol){volume = vol;}
 
   public void run() {
-    byte[] buf = new byte[processSize*4]; 
-      // 256, 512, 1024, etc. x 4 (16bit*2ch)
+    // byte[] buf = new byte[processSize*4]; 
+        // 256, 512, 1024, etc. x 4 (16bit*2ch)
+    byte[] buf = new byte[1024*4];
     running = true;
 
     try {
@@ -428,7 +429,8 @@ class FeedbackBoosterPlayer implements Runnable {
        int nread, nwritten;
        float alpha = 0.2f;
 
-       while((nread = iline.read(buf,0,buf.length)) > 0 && running) {
+       while(running) {
+          nread = iline.read(buf,0,iline.available());
           floatSamples = Util.StereoToMono(Util.LE16ToFloat(buf, nread)); 
 
           if (!bypass){
