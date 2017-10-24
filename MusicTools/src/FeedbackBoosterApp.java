@@ -356,13 +356,14 @@ class FeedbackBoosterPlayer implements Runnable {
     try {
       iline = AudioSystem.getTargetDataLine(format, input);
       sline = AudioSystem.getSourceDataLine(format,output);
-      System.out.println("Input buffer: " + iline.getBufferSize());
-      System.out.println("Output buffer: " + sline.getBufferSize());
-      iline.open(format, processSize*8);
+//      System.out.println("Input buffer: " + iline.getBufferSize());
+//      System.out.println("Output buffer: " + sline.getBufferSize());
+//      iline.open(format, processSize*8);
+      iline.open(format);
       // sline.open(format, processSize*4);
       sline.open(format);
       System.out.println("Input buffer: " + iline.getBufferSize());
-      // System.out.println("Output buffer: " + sline.getBufferSize());
+      System.out.println("Output buffer: " + sline.getBufferSize());
     } catch (Exception e){ e.printStackTrace(); } 
 
     setBypass(true); setAutoEQ(false);
