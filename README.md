@@ -65,6 +65,8 @@ List of programs
    Playback delay is intensionaly to have good sound quality.
    Automatic filter and splitter is work in progress.
 
+   Brief guide is in the doc/ directory(folder).
+
 4) FeedbackBoosterApp2.jar (work in progress)
 
    Feedback booster for electric guitar.
