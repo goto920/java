@@ -1,6 +1,0 @@
-help: ヘルプ\n \
-mp4ビデオの音声トラック, mp4オーディオ(m4a, mp4),\n \
-aac, mp3, 24bit wave(.wav)を16bit wavに変換します。\n \
-入力ファイル input.ext を input.ext-16bit.wavとして\n \
-出力します。ファイルを選択して、Startボタンを押すだけです。\n \
-終了はCloseボタン、または、ウィンドウのXマークで。
