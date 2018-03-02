@@ -2,7 +2,15 @@ JTRANSFORM= pl org/apache \
 	org/jtransforms/utils \
 	org/jtransforms/fft/FloatFFT_1D*.class
 
-all: TimePitchPlayerApp.jar FilteredPlayerApp.jar FeedbackBoosterApp2.jar
+noGUI: FeedbackBoosterNoGUI
+	jar cvf FeedbackBoosterNoGUI.jar \
+	FeedbackBoosterNoGUI.class FeedbackBoosterPlayer.class \
+	jp/kmgoto/music/*.class
+
+FeedbackBoosterNoGUI: clean FeedbackBoosterNoGUI.java
+	javac FeedbackBoosterNoGUI.java
+
+all: TimePitchPlayerApp.jar FilteredPlayerApp.jar FeedbackBoosterApp.jar
 
 TimePitchPlayerApp.jar: TimePitchPlayerApp 
 	jar cvef TimePitchPlayerApp ../../bin/TimePitchPlayerApp.jar \
@@ -32,10 +40,10 @@ FilteredPlayerApp: clean FilteredPlayerApp.java FilterGUI.java
 	javac FilteredPlayerApp.java
 
 FeedbackBoosterApp.jar: FeedbackBoosterApp
-	jar cvef FeedbackBoosterApp FeedbackBoosterApp.jar \
+	jar cvef FeedbackBoosterApp ../../bin/FeedbackBoosterApp.jar \
 	FeedbackBoosterApp.class FeedbackBoosterPlayer.class \
 	jp/kmgoto/music/*.class
-	chmod +x FeedbackBoosterApp.jar
+	chmod +x ../../bin/FeedbackBoosterApp.jar
 
 FeedbackBoosterApp2.jar: FeedbackBoosterApp2
 	jar cvef FeedbackBoosterApp2 ../../bin/FeedbackBoosterApp2.jar \

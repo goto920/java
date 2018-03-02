@@ -1,0 +1,232 @@
+rm -f *.class jp/kmgoto/music/*.class
+javac FeedbackBoosterNoGUI.java
+FeedbackBoosterNoGUI.java:234: エラー: 無効なメソッド宣言です。戻り値の型が必要です。
+    add(panel, BorderLayout.NORTH);
+    ^
+FeedbackBoosterNoGUI.java:234: エラー: <identifier>がありません
+    add(panel, BorderLayout.NORTH);
+             ^
+FeedbackBoosterNoGUI.java:234: エラー: <identifier>がありません
+    add(panel, BorderLayout.NORTH);
+                                 ^
+FeedbackBoosterNoGUI.java:235: エラー: 無効なメソッド宣言です。戻り値の型が必要です。
+    add(panel2, BorderLayout.CENTER);
+    ^
+FeedbackBoosterNoGUI.java:235: エラー: <identifier>がありません
+    add(panel2, BorderLayout.CENTER);
+              ^
+FeedbackBoosterNoGUI.java:235: エラー: <identifier>がありません
+    add(panel2, BorderLayout.CENTER);
+                                   ^
+FeedbackBoosterNoGUI.java:238: エラー: 無効なメソッド宣言です。戻り値の型が必要です。
+    pack();
+    ^
+FeedbackBoosterNoGUI.java:239: エラー: 無効なメソッド宣言です。戻り値の型が必要です。
+    setVisible(true);  
+    ^
+FeedbackBoosterNoGUI.java:239: エラー: 型の開始が不正です
+    setVisible(true);  
+               ^
+FeedbackBoosterNoGUI.java:243: エラー: class、interfaceまたはenumがありません
+  public synchronized void actionPerformed(ActionEvent event) {
+                      ^
+FeedbackBoosterNoGUI.java:246: エラー: class、interfaceまたはenumがありません
+   if (obj == processButton){
+   ^
+FeedbackBoosterNoGUI.java:249: エラー: class、interfaceまたはenumがありません
+        if(player != null) player.setBypass(true);
+        ^
+FeedbackBoosterNoGUI.java:250: エラー: class、interfaceまたはenumがありません
+      } else {
+      ^
+FeedbackBoosterNoGUI.java:252: エラー: class、interfaceまたはenumがありません
+        if(player != null) player.setBypass(false);
+        ^
+FeedbackBoosterNoGUI.java:253: エラー: class、interfaceまたはenumがありません
+      }
+      ^
+FeedbackBoosterNoGUI.java:256: エラー: class、interfaceまたはenumがありません
+   }
+   ^
+FeedbackBoosterNoGUI.java:261: エラー: class、interfaceまたはenumがありません
+         eQButton.setText("autoEQ");
+         ^
+FeedbackBoosterNoGUI.java:262: エラー: class、interfaceまたはenumがありません
+      } else {
+      ^
+FeedbackBoosterNoGUI.java:264: エラー: class、interfaceまたはenumがありません
+         eQButton.setText("manualEQ");
+         ^
+FeedbackBoosterNoGUI.java:265: エラー: class、interfaceまたはenumがありません
+      }
+      ^
+FeedbackBoosterNoGUI.java:267: エラー: class、interfaceまたはenumがありません
+   }
+   ^
+FeedbackBoosterNoGUI.java:272: エラー: class、interfaceまたはenumがありません
+     inputPort = inputMixers[setInputPortCombo.getSelectedIndex() - 1];
+     ^
+FeedbackBoosterNoGUI.java:273: エラー: class、interfaceまたはenumがありません
+     System.out.println("input port: " + inputPort.getName());
+     ^
+FeedbackBoosterNoGUI.java:274: エラー: class、interfaceまたはenumがありません
+     return;
+     ^
+FeedbackBoosterNoGUI.java:275: エラー: class、interfaceまたはenumがありません
+   } 
+   ^
+FeedbackBoosterNoGUI.java:280: エラー: class、interfaceまたはenumがありません
+     outputPort = outputMixers[setOutputPortCombo.getSelectedIndex() -1];
+     ^
+FeedbackBoosterNoGUI.java:281: エラー: class、interfaceまたはenumがありません
+     System.out.println("output port: " + outputPort.getName());
+     ^
+FeedbackBoosterNoGUI.java:282: エラー: class、interfaceまたはenumがありません
+     if (player != null) player.stopPlay();
+     ^
+FeedbackBoosterNoGUI.java:284: エラー: class、interfaceまたはenumがありません
+     if (inputPort != null && outputPort != null){
+     ^
+FeedbackBoosterNoGUI.java:286: エラー: class、interfaceまたはenumがありません
+        player = new FeedbackBoosterPlayer(inputPort, outputPort);
+        ^
+FeedbackBoosterNoGUI.java:287: エラー: class、interfaceまたはenumがありません
+        player.setParent(this);
+        ^
+FeedbackBoosterNoGUI.java:288: エラー: class、interfaceまたはenumがありません
+        Thread pt = new Thread(player); 
+        ^
+FeedbackBoosterNoGUI.java:289: エラー: class、interfaceまたはenumがありません
+        pt.start();
+        ^
+FeedbackBoosterNoGUI.java:290: エラー: class、interfaceまたはenumがありません
+     }
+     ^
+FeedbackBoosterNoGUI.java:293: エラー: class、interfaceまたはenumがありません
+   } 
+   ^
+FeedbackBoosterNoGUI.java:297: エラー: class、interfaceまたはenumがありません
+  public synchronized void stateChanged(ChangeEvent e){
+                      ^
+FeedbackBoosterNoGUI.java:300: エラー: class、interfaceまたはenumがありません
+    if (obj == eQSlider){
+    ^
+FeedbackBoosterNoGUI.java:302: エラー: class、interfaceまたはenumがありません
+      float Hz = (float) (41.2 * Math.pow(2, value/12.0));
+      ^
+FeedbackBoosterNoGUI.java:303: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setPeakHz(Hz);
+      ^
+FeedbackBoosterNoGUI.java:304: エラー: class、interfaceまたはenumがありません
+      peakHz.setText("peakHz: " + String.format("%10.2f",Hz));
+      ^
+FeedbackBoosterNoGUI.java:305: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:306: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:310: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setCompGain(value);
+      ^
+FeedbackBoosterNoGUI.java:311: エラー: class、interfaceまたはenumがありません
+      compGain.setText("CompGain(dB): " + value);
+      ^
+FeedbackBoosterNoGUI.java:312: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:313: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:317: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setEQGain(value);
+      ^
+FeedbackBoosterNoGUI.java:318: エラー: class、interfaceまたはenumがありません
+      eQGain.setText("EQGain(dB): " + value);
+      ^
+FeedbackBoosterNoGUI.java:319: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:320: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:324: エラー: class、interfaceまたはenumがありません
+      float mix = value/100f;
+      ^
+FeedbackBoosterNoGUI.java:325: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setOctMix(mix);
+      ^
+FeedbackBoosterNoGUI.java:326: エラー: class、interfaceまたはenumがありません
+      octMix.setText("octMix: " + mix);
+      ^
+FeedbackBoosterNoGUI.java:327: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:328: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:332: エラー: class、interfaceまたはenumがありません
+      float q = value/10f;
+      ^
+FeedbackBoosterNoGUI.java:333: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setQ(q);
+      ^
+FeedbackBoosterNoGUI.java:334: エラー: class、interfaceまたはenumがありません
+      Q.setText("Q: " + q);
+      ^
+FeedbackBoosterNoGUI.java:335: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:336: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:340: エラー: class、interfaceまたはenumがありません
+      float ratio = value/10f;
+      ^
+FeedbackBoosterNoGUI.java:341: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setRatio(ratio);
+      ^
+FeedbackBoosterNoGUI.java:342: エラー: class、interfaceまたはenumがありません
+      compRatio.setText("CompRatio: " + ratio);
+      ^
+FeedbackBoosterNoGUI.java:343: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:344: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:348: エラー: class、interfaceまたはenumがありません
+      if (player != null) player.setThresh(value);
+      ^
+FeedbackBoosterNoGUI.java:349: エラー: class、interfaceまたはenumがありません
+      compThresh.setText("CompThresh(dB): " + value);
+      ^
+FeedbackBoosterNoGUI.java:350: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:351: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:355: エラー: class、interfaceまたはenumがありません
+      volume.setText("Volume: " + 
+      ^
+FeedbackBoosterNoGUI.java:357: エラー: class、interfaceまたはenumがありません
+      if(player != null) player.setVolume(value/100f);
+      ^
+FeedbackBoosterNoGUI.java:358: エラー: class、interfaceまたはenumがありません
+      return;
+      ^
+FeedbackBoosterNoGUI.java:359: エラー: class、interfaceまたはenumがありません
+    }
+    ^
+FeedbackBoosterNoGUI.java:363: エラー: class、interfaceまたはenumがありません
+  public static void main(String[] args) throws Exception {
+                ^
+FeedbackBoosterNoGUI.java:365: エラー: class、interfaceまたはenumがありません
+    else FeedbackBoosterApp.main(args);
+    ^
+FeedbackBoosterNoGUI.java:367: エラー: class、interfaceまたはenumがありません
+  }
+  ^
+エラー76個
+make: *** [FeedbackBoosterNoGUI] エラー 1
